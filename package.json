@@ -2,15 +2,16 @@
     "name": "link-with-leetcode",
     "displayName": "Link with Leetcode",
     "description": "Link vscode with leetcode's code editor.",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "publisher": "blackmiaool",
     "engines": {
         "vscode": "^1.13.0"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/blackmiaool/vscode-link-with-leetcode.git"
+        "url": "git+https://github.com/blackmiaool/vscode-link-with-leetcode"
     },
+    "homepage": "https://github.com/blackmiaool/vscode-link-with-leetcode",
     "categories": [
         "Other"
     ],
