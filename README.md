@@ -16,7 +16,7 @@ Two-way binding.
 
 # Install
 
-
+Install the tampermonkey script from https://raw.githubusercontent.com/blackmiaool/vscode-link-with-leetcode/master/monkey.js.
 
 ## Known Issues
 
