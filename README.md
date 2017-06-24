@@ -6,7 +6,7 @@ Link VS Code with leetcode's code editor.
 
 Two-way binding.
 
-![feature X](./output.png)
+![feature X](https://raw.githubusercontent.com/blackmiaool/vscode-link-with-leetcode/master/output.gif)
 
 
 ## Requirements
