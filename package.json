@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/blackmiaool/vscode-link-with-leetcode"
+        "url": "https://github.com/blackmiaool/vscode-link-with-leetcode"
     },
     "homepage": "https://github.com/blackmiaool/vscode-link-with-leetcode",
     "categories": [
