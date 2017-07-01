@@ -2,7 +2,7 @@
     "name": "link-with-leetcode",
     "displayName": "Link with Leetcode",
     "description": "Link vscode with leetcode's code editor.",
-    "version": "0.1.0",
+    "version": "0.3.0",
     "publisher": "blackmiaool",
     "engines": {
         "vscode": "^1.13.0"

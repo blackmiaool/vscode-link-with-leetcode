@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         leetcode-editor
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://leetcode.com/*
@@ -213,7 +213,12 @@ function FindReact(dom) {
         let socket;
         const $btn = $(`<button class='btn btn-default' style='margin-left:12px;'>Open in VS Code<span class="vscode-connection" style="width:10px;height:10px;margin-left:7px;display:inline-block;border-radius:100px;background-color:grey;"></span></button>`);
         $bar.find("wrapper").last().after($btn);
-        const editor = FindReact($(".ReactCodeMirror")[0])._currentElement._owner._instance.codeMirror;
+        const instance = FindReact($(".ReactCodeMirror")[0])._currentElement._owner._instance;
+        const editor = instance.codeMirror;
+
+        function updateCodeforReact(code) {
+            instance.props.onChange(code);
+        }
 
         function initSocket() {
             socket = getSocket("ws://localhost:28374", "browser");
@@ -225,6 +230,7 @@ function FindReact(dom) {
                 if (document.visibilityState === 'hidden') {
                     return;
                 }
+                updateCodeforReact(value);
                 editor.setValue(value, 1);
             });
             socket.on("open", function () {
