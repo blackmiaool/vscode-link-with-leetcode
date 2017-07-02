@@ -22,3 +22,5 @@ Install the tampermonkey script from https://raw.githubusercontent.com/blackmiao
 
 I have an [issue](https://github.com/Microsoft/vscode/issues/29373) and a [question](https://stackoverflow.com/questions/44733028/how-to-close-textdocument-in-vs-code) that impact the functionality of the extension.
 
+They(leetcode) are upgrading their code editor. The monkey script can only support normal question now, which is upgraded. I guess they will update their contest page in several weeks. 
+
