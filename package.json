@@ -25,7 +25,18 @@
                 "command": "extension.linkWithLeetCode",
                 "title": "Link With LeetCode"
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Link with Leetcode extension configuration",
+            "properties": {
+                "linkWithLeetcode.openDescription": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Open question tab together with code tab."
+                }
+            }
+        }
     },
     "scripts": {
         "postinstall": "node ./node_modules/vscode/bin/install",

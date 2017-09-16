@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         leetcode-editor
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  try to take over the world!
 // @author       You
 // @match        https://leetcode.com/*
@@ -36,9 +36,7 @@ class Socket {
                     cb = (data) => this.sendCb(uid, data);
 
                 }
-                this.eventListenerMap[event].forEach(function ({
-                    listener
-                }) {
+                this.eventListenerMap[event].forEach(function ({listener}) {
                     listener(data, cb);
                 });
                 this.clearListenrMap(event);
@@ -51,16 +49,12 @@ class Socket {
         if (this.isClient && this.type) {
             ws.addEventListener("open", (event) => {
                 this.emit("setType", this.type);
-                let onceArr = [];
-                this.eventListenerMap["open"] && this.eventListenerMap["open"].forEach(({
-                    listener
-                }) => listener(event));
+                let onceArr=[];
+                this.eventListenerMap["open"]&&this.eventListenerMap["open"].forEach(({listener})=>listener(event));
                 this.clearListenrMap("open");
             });
             ws.addEventListener("close", () => {
-                this.eventListenerMap["close"] && this.eventListenerMap["close"].forEach(({
-                    listener
-                }) => listener(event));
+                this.eventListenerMap["close"]&&this.eventListenerMap["close"].forEach(({listener})=>listener(event));
                 this.clearListenrMap("close");
             });
 
@@ -73,20 +67,18 @@ class Socket {
             }, 5000);
         }
     }
-    clearListenrMap(eventName) {
-        if (!this.eventListenerMap[eventName]) {
+    clearListenrMap(eventName){
+        if(!this.eventListenerMap[eventName]){
             return;
         }
-        const arr = [];
-        this.eventListenerMap[eventName].forEach(function ({
-            once
-        }, i) {
-            if (once) {
+        const arr=[];
+        this.eventListenerMap[eventName].forEach(function({once},i){
+            if(once){
                 arr.push(i);
             }
         });
-        arr.forEach((index, i) => {
-            this.eventListenerMap[eventName].splice(index - i, 1);
+        arr.forEach((index,i)=>{
+            this.eventListenerMap[eventName].splice(index-i,1);
         });
     }
     constructor({
@@ -131,21 +123,15 @@ class Socket {
         if (!this.eventListenerMap[event]) {
             this.eventListenerMap[event] = [];
         }
-        this.eventListenerMap[event].push({
-            listener
-        });
+        this.eventListenerMap[event].push({listener});
     }
-    once(event, listener) {
+    once(event,listener){
         if (!this.eventListenerMap[event]) {
             this.eventListenerMap[event] = [];
         }
-        this.eventListenerMap[event].push({
-            listener,
-            once: true
-        });
+        this.eventListenerMap[event].push({listener,once:true});
     }
 };
-
 function getSocket(addr, type) {
     let ws;
     //auto connect
@@ -183,11 +169,10 @@ function getSocket(addr, type) {
     connect(addr);
     return socket;
 }
-const langMap = {
-    python3: 'python',
-    golang: 'go'
+const langMap={
+    python3:'python',
+    golang:'go'
 }
-
 function FindReact(dom) {
     for (var key in dom) {
         if (key.startsWith("__reactInternalInstance$")) {
@@ -196,113 +181,117 @@ function FindReact(dom) {
     }
     return null;
 };
-!(function () {
+!(function() {
     'use strict';
 
-    const interval = setInterval(function () {
-        if (typeof $ === 'undefined')
+    const interval=setInterval(function(){
+        if(typeof $==='undefined')
             return;
-        const $editor = $(".ReactCodeMirror");
-        const $bar = $(".control-btn-bar");
-        const $$ = $bar.find.bind($bar);
-        if (!$editor.length || !$bar.length) {
+        const $editor=$(".ReactCodeMirror");
+        const $bar=$(".control-btn-bar,.toolbar-base");
+        const $$=$bar.find.bind($bar);
+        if(!$editor.length||!$bar.length){
             return;
         }
         let remoteCode;
         clearInterval(interval);
         let socket;
-        const $btn = $(`<button class='btn btn-default' style='margin-left:12px;'>Open in VS Code<span class="vscode-connection" style="width:10px;height:10px;margin-left:7px;display:inline-block;border-radius:100px;background-color:grey;"></span></button>`);
-        $bar.find("wrapper").last().after($btn);
-        const instance = FindReact($(".ReactCodeMirror")[0])._currentElement._owner._instance;
-        const editor = instance.codeMirror;
-
-        function updateCodeforReact(code) {
+        const $btn=$(`<button class='btn btn-default' style='margin-left:12px;'>VS Code<span class="vscode-connection" style="width:10px;height:10px;margin-left:7px;display:inline-block;border-radius:100px;background-color:grey;"></span></button>`);
+        $bar.find(".pull-right").last().prepend($btn);
+        const instance=FindReact($(".ReactCodeMirror")[0])._currentElement._owner._instance;
+        const editor=instance.codeMirror;
+        function updateCodeforReact(code){
             instance.props.onChange(code);
         }
-
-        function initSocket() {
-            socket = getSocket("ws://localhost:28374", "browser");
-            socket.on("change", function (value) {
-                if (editor.getValue() === value) {
+        let socketEditing=false;
+        let preventSocketEditing=false;
+        function initSocket(){
+            socket=getSocket("ws://localhost:28374","browser");
+            socket.on("change",function(value){
+                if(editor.getValue()===value){
+                    return ;
+                }
+                remoteCode=value;
+                if(document.visibilityState==='hidden'){
                     return;
                 }
-                remoteCode = value;
-                if (document.visibilityState === 'hidden') {
-                    return;
+                if(preventSocketEditing){
+                    return ;
                 }
+            
                 updateCodeforReact(value);
-                editor.setValue(value, 1);
+                socketEditing=true;
+                editor.setValue(value,1);
+                socketEditing=false;
             });
-            socket.on("open", function () {
+            socket.on("open",function(){
                 enable(true);
             });
-            socket.on("close", function () {
+            socket.on("close",function(){
                 disable();
             });
         }
-        document.addEventListener("visibilitychange", function () {
-            if (!socket) {
+        document.addEventListener("visibilitychange", function() {
+            if(!socket){
                 return;
             }
-            if (document.visibilityState === 'hidden') {
+            if(document.visibilityState==='hidden'){
                 return;
             }
 
             onChange();
         });
-
-        function onChange() {
-            if (!socket) {
+        function onChange(){
+            if(!socket){
                 return;
             }
-            const code = editor.getValue();
-            if (!code) {
+            const code=editor.getValue();
+            if(!code){
                 return;
             }
-            if (code === remoteCode) {
+            if(code===remoteCode){
                 return;
             }
-            socket.emit("change", {
-                content: code
-            });
+            socket.emit("change",{content:code});
         }
-        editor.on('change', function () {
-
+        editor.on('change', function() {
+            if(!socketEditing){
+                if(preventSocketEditing){
+                    clearTimeout(preventSocketEditing);
+                }
+                preventSocketEditing=setTimeout(()=>{
+                    preventSocketEditing=0;
+                },200);
+            }
             setTimeout(onChange);
 
         });
-
-        function onClick() {
-            if (!socket) {
+        function onClick(){
+            if(!socket){
                 initSocket();
-                socket.once('open', onClick);
+                socket.once('open',onClick);
                 return;
             }
-            let language = $$("[name='lang']").val();
-            if (langMap[language]) {
-                language = langMap[language];
+            let language=$$("[name='lang']").val()||$$("#langMenu").text().toLowerCase().trim();
+            if(langMap[language]){
+                language=langMap[language];
             }
-            const code = editor.getValue();
-            remoteCode = code;
-            socket.emit("create", {
-                language,
-                content: remoteCode
-            });
+            const code=editor.getValue();
+            remoteCode=code;
+            socket.emit("create",{language,content:remoteCode,description:$(".question-description").text().trim()});
         }
         $btn.click(onClick);
-
-        function enable(green) {
-            if (green) {
-                $btn.find(".vscode-connection").css("background-color", "#5cb85c");
+        function enable(green){
+            if(green){
+                $btn.find(".vscode-connection").css("background-color","#5cb85c");
             }
             $btn.removeAttr("title").removeAttr("disabled");
         }
-
-        function disable() {
-            $btn.attr("disabled", "").attr("title", "disconnected").find(".vscode-connection").css("background-color", "gray");
+        function disable(){
+            $btn.attr("disabled","").attr("title","disconnected").find(".vscode-connection").css("background-color","gray");
         }
         enable(false);
 
-    }, 100);
+    },100);
 
 })();

@@ -30,19 +30,28 @@ vscode.workspace.onDidCloseTextDocument(function (TextDocument) {
     }
 });
 
-function getEditor(language, content) {
+function getEditor(language, content, description) {
     return new Promise(function (resolve) {
         if (editorSave) {
             resolve(editorSave);
             return;
         }
+        
+        if (description&&vscode.workspace.getConfiguration('linkWithLeetcode').openDescription) {
+            vscode.workspace.openTextDocument({
+                language:'text',
+                content:description,
+            }).then((TextDocument) => {
+                vscode.window.showTextDocument(TextDocument, vscode.ViewColumn.Two);
+                   
+            });
+        }
+
         vscode.workspace.openTextDocument({
             language,
             content
         }).then((TextDocument) => {
-            vscode
-                .window
-                .showTextDocument(TextDocument)
+            vscode.window.showTextDocument(TextDocument)
                 .then(editor => {
                     editorSave = {
                         editor,
@@ -60,9 +69,10 @@ io.on('connection', function (socket) {
     socket.on("create", function ({
         language,
         content,
+        description,
         fullUpdate = false
     }, cb) {
-        getEditor(language, content).then(function ({
+        getEditor(language, content, description).then(function ({
             editor,
             TextDocument
         }) {
@@ -107,5 +117,5 @@ function activate(context) {
 }
 exports.activate = activate;
 
-function deactivate() {}
+function deactivate() { }
 exports.deactivate = deactivate;
