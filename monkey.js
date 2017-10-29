@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         leetcode-editor
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  try to take over the world!
 // @author       You
 // @match        https://leetcode.com/*
@@ -173,14 +173,7 @@ const langMap={
     python3:'python',
     golang:'go'
 }
-function FindReact(dom) {
-    for (var key in dom) {
-        if (key.startsWith("__reactInternalInstance$")) {
-            return dom[key];
-        }
-    }
-    return null;
-};
+
 !(function() {
     'use strict';
 
@@ -198,11 +191,8 @@ function FindReact(dom) {
         let socket;
         const $btn=$(`<button class='btn btn-default' style='margin-left:12px;'>VS Code<span class="vscode-connection" style="width:10px;height:10px;margin-left:7px;display:inline-block;border-radius:100px;background-color:grey;"></span></button>`);
         $bar.find(".pull-right").last().prepend($btn);
-        const instance=FindReact($(".ReactCodeMirror")[0])._currentElement._owner._instance;
-        const editor=instance.codeMirror;
-        function updateCodeforReact(code){
-            instance.props.onChange(code);
-        }
+        const editor=$(".CodeMirror").last()[0].CodeMirror;
+
         let socketEditing=false;
         let preventSocketEditing=false;
         function initSocket(){
@@ -219,7 +209,6 @@ function FindReact(dom) {
                     return ;
                 }
             
-                updateCodeforReact(value);
                 socketEditing=true;
                 editor.setValue(value,1);
                 socketEditing=false;
