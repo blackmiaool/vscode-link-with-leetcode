@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         leetcode-editor
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  try to take over the world!
 // @author       You
 // @match        https://leetcode.com/*
@@ -192,7 +192,6 @@ const langMap={
         const $btn=$(`<button class='btn btn-default' style='margin-left:12px;'>VS Code<span class="vscode-connection" style="width:10px;height:10px;margin-left:7px;display:inline-block;border-radius:100px;background-color:grey;"></span></button>`);
         $bar.find(".pull-right").last().prepend($btn);
         const editor=$(".CodeMirror").last()[0].CodeMirror;
-
         let socketEditing=false;
         let preventSocketEditing=false;
         function initSocket(){
@@ -211,6 +210,7 @@ const langMap={
 
                 socketEditing=true;
                 editor.setValue(value,1);
+                editor.replaceRange(value[0],{line:0,ch:0},{line:0,ch:1})
                 socketEditing=false;
             });
             socket.on("open",function(){
@@ -243,7 +243,7 @@ const langMap={
             }
             socket.emit("change",{content:code});
         }
-        editor.on('change', function() {
+        editor.on('change', function(e,t,b) {
             if(!socketEditing){
                 if(preventSocketEditing){
                     clearTimeout(preventSocketEditing);
