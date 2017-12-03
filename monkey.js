@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         leetcode-editor
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  try to take over the world!
 // @author       You
 // @match        https://leetcode.com/*
@@ -208,7 +208,7 @@ const langMap={
                 if(preventSocketEditing){
                     return ;
                 }
-            
+
                 socketEditing=true;
                 editor.setValue(value,1);
                 socketEditing=false;
@@ -261,7 +261,7 @@ const langMap={
                 socket.once('open',onClick);
                 return;
             }
-            let language=$$("[name='lang']").val()||$$("#langMenu").text().toLowerCase().trim();
+            let language=$$("[name='lang-select']").val()||$$("#langMenu").text().toLowerCase().trim();
             if(langMap[language]){
                 language=langMap[language];
             }
