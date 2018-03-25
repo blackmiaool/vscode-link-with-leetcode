@@ -1,56 +1,62 @@
 {
-    "name": "link-with-leetcode",
-    "displayName": "Link with Leetcode",
-    "description": "Link vscode with leetcode's code editor.",
-    "version": "0.6.0",
-    "publisher": "blackmiaool",
-    "engines": {
-        "vscode": "^1.13.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/blackmiaool/vscode-link-with-leetcode"
-    },
-    "homepage": "https://github.com/blackmiaool/vscode-link-with-leetcode",
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:extension.linkWithLeetCode"
-    ],
-    "main": "./extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "extension.linkWithLeetCode",
-                "title": "Link With LeetCode"
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "Link with Leetcode extension configuration",
-            "properties": {
-                "linkWithLeetcode.openDescription": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Open question tab together with code tab."
-                }
-            }
-        }
-    },
-    "scripts": {
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "typescript": "^2.0.3",
-        "vscode": "^1.0.0",
-        "mocha": "^2.3.3",
-        "eslint": "^3.6.0",
-        "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
-    },
-    "dependencies": {
-        "ws": "^3.0.0"
-    }
+	"name": "link-with-leetcode",
+	"displayName": "Link with Leetcode",
+	"description": "Link vscode with leetcode's code editor.",
+	"version": "0.7.1",
+	"icon": "./logo.png",
+	"publisher": "blackmiaool",
+	"engines": {
+		"vscode": "^1.13.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/blackmiaool/vscode-link-with-leetcode"
+	},
+	"homepage": "https://github.com/blackmiaool/vscode-link-with-leetcode",
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.linkWithLeetCode"
+	],
+	"main": "./extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.linkWithLeetCode",
+				"title": "Link With LeetCode"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Link with Leetcode extension configuration",
+			"properties": {
+				"linkWithLeetcode.openDescription": {
+					"type": "boolean",
+					"default": false,
+					"description": "Open question tab together with code tab."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.0.3",
+		"vscode": "^1.0.0",
+		"mocha": "^2.3.3",
+		"eslint": "^3.6.0",
+		"@types/node": "^6.0.40",
+		"@types/mocha": "^2.2.32"
+	},
+	"dependencies": {
+		"ws": "^3.0.0"
+	},
+	"__metadata": {
+		"id": "cf718a67-6a3a-4bd9-9513-bf2bad2d4026",
+		"publisherDisplayName": "blackmiaool",
+		"publisherId": "cc17e659-64d3-4e92-bcf4-df218f0cf8cb"
+	}
 }
