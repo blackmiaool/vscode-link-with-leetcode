@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         leetcode-editor
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 // @description  try to take over the world!
 // @author       You
 // @match        https://leetcode.com/*
-// @grant        none
+// @grant        unsafeWindow
+// @require      https://zeptojs.com/zepto.min.js
+// @run-at       document-end
 // ==/UserScript==
 class Socket {
     init(ws) {
@@ -173,15 +175,18 @@ const langMap={
     python3:'python',
     golang:'go'
 }
-
 !(function() {
     'use strict';
 
     const interval=setInterval(function(){
-        if(typeof $==='undefined')
+        if(typeof Zepto==='undefined'){
             return;
-        const $editor=$(".ReactCodeMirror");
-        const $bar=$(".control-btn-bar,.toolbar-base");
+        }
+
+        const $=Zepto;
+        unsafeWindow.Zepto=Zepto;
+        const $editor=$(".react-codemirror2");
+        const $bar=$("#code-area");
         const $$=$bar.find.bind($bar);
         if(!$editor.length||!$bar.length){
             return;
@@ -189,8 +194,15 @@ const langMap={
         let remoteCode;
         clearInterval(interval);
         let socket;
-        const $btn=$(`<button class='btn btn-default' style='margin-left:12px;'>VS Code<span class="vscode-connection" style="width:10px;height:10px;margin-left:7px;display:inline-block;border-radius:100px;background-color:grey;"></span></button>`);
-        $bar.find(".pull-right").last().prepend($btn);
+        const $btn=$(`<button class='btn btn-default' style='    margin-left: 12px;
+    margin-right: 10px;
+    background: none;
+    border: 1px solid #263238;
+    border-radius: 3px;
+    color: #263238;
+    font-size: 12px;
+    padding: 2px 7px;'>VS Code<span class="vscode-connection" style="width:10px;height:10px;margin-left:7px;display:inline-block;border-radius:100px;background-color:grey;"></span></button>`);
+        $bar.find("#lang-select").parent().parent().append($btn);
         const editor=$(".CodeMirror").first()[0].CodeMirror;
         let socketEditing=false;
         let preventSocketEditing=false;
@@ -261,13 +273,13 @@ const langMap={
                 socket.once('open',onClick);
                 return;
             }
-            let language=$$("[name='lang-select']").val()||$$("#langMenu").text().toLowerCase().trim();
+            let language=$$("[name='lang-select']").val()||$$("#lang-select .ant-select-selection-selected-value").text().toLowerCase().trim();
             if(langMap[language]){
                 language=langMap[language];
             }
             const code=editor.getValue();
             remoteCode=code;
-            socket.emit("create",{language,content:remoteCode,description:$(".question-description").text().trim()});
+            socket.emit("create",{language,content:remoteCode,description:$('[data-key="description-content"]').text().trim()});
         }
         $btn.click(onClick);
         function enable(green){
